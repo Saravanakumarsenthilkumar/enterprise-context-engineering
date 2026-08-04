@@ -73,29 +73,58 @@ enterprise-context-engineering/
 
 ### Local Setup
 
+#### **On Windows (PowerShell)**
+
+1. **Clone & Create Virtual Environment**
+   ```powershell
+   git clone https://github.com/enterprise/context-engineering.git
+   cd context-engineering
+   python -m venv .venv
+   ```
+
+2. **Activate Virtual Environment**
+   ```powershell
+   # Unblock execution policy for current session if needed:
+   Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+   
+   # Activate:
+   .\.venv\Scripts\Activate.ps1
+   ```
+
+3. **Install Dependencies & Run API Server**
+   ```powershell
+   python -m pip install -r requirements.txt
+   python -m uvicorn src.api.main:app --reload --port 8000
+   ```
+
+---
+
+#### **On Linux / macOS (Bash / Zsh)**
+
 1. **Clone & Setup Environment**
    ```bash
    git clone https://github.com/enterprise/context-engineering.git
    cd context-engineering
-   python -m venv .venv
-   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+   python3 -m venv .venv
+   source .venv/bin/activate
    pip install -r requirements.txt
    ```
 
-2. **Run Tests**
-   ```bash
-   pytest tests/ --cov=src
-   ```
-
-3. **Start the API Service**
+2. **Run API Server**
    ```bash
    uvicorn src.api.main:app --reload --port 8000
    ```
 
-4. **Verify Health Endpoint**
-   ```bash
-   curl http://localhost:8000/health
-   ```
+---
+
+### 🌐 Access API Endpoints
+
+Once the server is running, open your browser:
+
+- **Interactive Swagger Docs (Test Endpoints)**: [http://localhost:8000/docs](http://localhost:8000/docs)
+- **Root Welcome Endpoint**: [http://localhost:8000/](http://localhost:8000/)
+- **Health Check Endpoint**: [http://localhost:8000/health](http://localhost:8000/health)
+
 
 ---
 
