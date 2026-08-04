@@ -37,8 +37,19 @@ class ChunkRequest(BaseModel):
     metadata: Optional[Dict[str, Any]] = Field(default_factory=dict)
 
 
+@app.get("/", status_code=status.HTTP_200_OK)
+def root():
+    return {
+        "message": f"Welcome to {settings.APP_NAME}",
+        "environment": settings.ENVIRONMENT,
+        "documentation": "/docs",
+        "health_check": "/health"
+    }
+
+
 @app.get("/health", status_code=status.HTTP_200_OK)
 def health_check():
+
     return {
         "status": "healthy",
         "service": settings.APP_NAME,

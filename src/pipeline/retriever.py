@@ -1,10 +1,14 @@
+import numpy as np
 from typing import List, Dict, Any
 from src.security.rbac import rbac_filter
+from src.pipeline.embedding import embedding_generator
 
 
 class VectorRetriever:
+    """Enterprise Vector Store Retriever performing real Cosine Similarity search with RBAC filtering."""
+
     def __init__(self):
-        # Sample Enterprise Knowledge Base Documents
+        # Initializing enterprise document knowledge base
         self.mock_db = [
             {
                 "id": "doc-001",
@@ -23,11 +27,40 @@ class VectorRetriever:
             }
         ]
 
+        # Compute vector embeddings for knowledge base documents
+        for doc in self.mock_db:
+            doc["embedding"] = embedding_generator.generate_embedding(doc["content"])
+
+    def cosine_similarity(self, vec_a: List[float], vec_b: List[float]) -> float:
+        a = np.array(vec_a, dtype=np.float32)
+        b = np.array(vec_b, dtype=np.float32)
+        norm_a = np.linalg.norm(a)
+        norm_b = np.linalg.norm(b)
+        if norm_a == 0 or norm_b == 0:
+            return 0.0
+        return float(np.dot(a, b) / (norm_a * norm_b))
+
     def retrieve(self, query: str, user_roles: List[str], top_k: int = 2) -> List[Dict[str, Any]]:
-        # Filter documents based on RBAC first
+        # 1. Filter documents based on user RBAC permissions
         authorized_docs = rbac_filter.filter_documents(self.mock_db, user_roles)
-        # Return top_k documents
-        return authorized_docs[:top_k]
+        
+        if not authorized_docs:
+            return []
+
+        # 2. Compute query embedding
+        query_vec = embedding_generator.generate_embedding(query)
+
+        # 3. Calculate cosine similarity for all authorized docs
+        scored_docs = []
+        for doc in authorized_docs:
+            score = self.cosine_similarity(query_vec, doc["embedding"])
+            scored_doc = doc.copy()
+            scored_doc["similarity_score"] = round(score, 4)
+            scored_docs.append(scored_doc)
+
+        # 4. Sort descending by similarity score
+        scored_docs.sort(key=lambda x: x["similarity_score"], reverse=True)
+        return scored_docs[:top_k]
 
 
 vector_retriever = VectorRetriever()
