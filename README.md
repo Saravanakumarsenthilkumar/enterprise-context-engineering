@@ -1,8 +1,9 @@
 # Enterprise Context Engineering - Generative AI Landing Zone
 
-[![CI/CD Pipeline](https://github.com/enterprise/context-engineering/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/enterprise/context-engineering/actions)
+[![CI/CD Pipeline](https://img.shields.io/badge/CI%2FCD-GitHub_Actions-brightgreen.svg)](.github/workflows/ci-cd.yml)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Python Version](https://img.shields.io/badge/python-3.11%2B-blue)](https://www.python.org/)
+
 
 An enterprise-ready **Context Engineering Engine** for Generative AI Landing Zones. Designed to govern, sanitize, optimize, and inject enterprise context into Large Language Model (LLM) prompts dynamically with built-in PII redaction, Role-Based Access Control (RBAC), context window truncation, semantic chunking, and full telemetry.
 
